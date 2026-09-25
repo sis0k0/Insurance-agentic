@@ -8,18 +8,18 @@ from tempfile import NamedTemporaryFile
 from typing import Optional
 
 
-def stream_image_to_bedrock(image_path, model_id='us.anthropic.claude-sonnet-4-5-20250929-v1:0'):
+def stream_image_to_bedrock(image_path, model_id=os.getenv("BEDROCK_MODEL_SONNET", "anthropic.claude-sonnet-5")):
     """
     Send an image to Amazon Bedrock and stream the response
 
     :param image_path: Path to the image file
-    :param model_id: ID of the Bedrock model to use (default is Claude Sonnet 4.5)
+    :param model_id: ID or inference profile ARN of the Bedrock model to use
     :yield: Streamed chunks of the response
     """
     # Create a Bedrock Runtime client
     bedrock_runtime = boto3.client(
         service_name='bedrock-runtime',
-        region_name=os.getenv('AWS_REGION', 'us-east-1')
+        region_name=os.getenv("AWS_REGION", "us-east-1")
     )
     
     # Read the image file and encode it to base64
